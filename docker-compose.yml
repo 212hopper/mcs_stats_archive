@@ -16,8 +16,6 @@ services:
       - SQL_USERNAME=${SQL_USERNAME}
       - SQL_PASSWORD=${SQL_PASSWORD}
       - POLL_INTERVAL=${POLL_INTERVAL:-3600}
-    env_file:
-      - .env
     logging:
       driver: "json-file"
       options:
