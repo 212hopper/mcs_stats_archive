@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mcs-stats-archive:
+    build: .
+    container_name: mcs-stats-archive
+    restart: unless-stopped
+    environment:
+      - MCS_IP_PRIMARY=${MCS_IP_PRIMARY}
+      - MCS_IP_SECONDARY=${MCS_IP_SECONDARY}
+      - MCS_PORT=${MCS_PORT:-443}
+      - MCS_USERNAME=${MCS_USERNAME}
+      - MCS_PASSWORD=${MCS_PASSWORD}
+      - SQL_SERVER=${SQL_SERVER}
+      - SQL_DATABASE=${SQL_DATABASE}
+      - SQL_USERNAME=${SQL_USERNAME}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - POLL_INTERVAL=${POLL_INTERVAL:-3600}
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

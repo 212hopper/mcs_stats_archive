@@ -1,0 +1,12 @@
+.env
+.git
+.gitignore
+*.md
+*.sql
+example_api_return.txt
+example_of_other_script.py
+create_tables.sql
+create_view.sql
+__pycache__
+*.pyc
+.vscode
