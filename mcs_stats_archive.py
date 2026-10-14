@@ -308,6 +308,7 @@ def insert_channel_snapshot(cursor, channel, capture_time):
     # Insert components (video, audio, others)
     for component in status.get('components', []):
         content_type = component.get('content_type')
+        codec = component.get('codec', '')
         
         if content_type == 'Video':
             cursor.execute("""
@@ -341,7 +342,7 @@ def insert_channel_snapshot(cursor, channel, capture_time):
                 component.get('brightness')
             )
             
-        elif content_type == 'Audio':
+        elif content_type == 'Audio' or (content_type == 'AES3' and codec == 'Dolby-E'):
             loudness = component.get('loudness', {})
             hourly = loudness.get('hourly', {})
             daily = loudness.get('daily', {})
@@ -352,8 +353,9 @@ def insert_channel_snapshot(cursor, channel, capture_time):
                  Codec, Language, Channels, Samplerate, PTSInterval, PTSPCRGap,
                  AudioStat, LoudnessIntegratedHourly, LoudnessLRAHourly, 
                  LoudnessPeakHourly, LoudnessIntegratedDaily, LoudnessLRADaily, 
-                 Level, TruePeak, Level3Sec)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 Level, TruePeak, Level3Sec, DolbyEPrograms, DolbyEDesc230, 
+                 DolbyEDesc231, DolbyEDesc232)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 snapshot_id,
                 component.get('pid'),
@@ -375,7 +377,11 @@ def insert_channel_snapshot(cursor, channel, capture_time):
                 daily.get('lra'),
                 component.get('level'),
                 component.get('truepeak'),
-                component.get('level_3sec')
+                component.get('level_3sec'),
+                component.get('desc_230_560'),  # Dolby-E programs info
+                component.get('desc_230_560'),  # Same as programs for now
+                component.get('desc_231_561'),  # Dolby-E CH 5.1 description
+                component.get('desc_232_562')   # Dolby-E CH 2 description
             )
             
         else:
