@@ -247,7 +247,7 @@ def insert_channel_snapshot(cursor, channel, capture_time):
     
     # Insert main snapshot
     cursor.execute("""
-        INSERT INTO ChannelSnapshots 
+        INSERT INTO mcs_stats_ChannelSnapshots 
         (CaptureDateTime, ChannelUUID, DeviceUUID, ChannelLabel, Timestamp, 
          AccessType, DefaultProfileUUID, DefaultProfileLabel, CPUUsed, 
          MemoryAllocated, MemoryUsed, HighestActiveSeverity, ActiveEventsCount)
@@ -275,7 +275,7 @@ def insert_channel_snapshot(cursor, channel, capture_time):
     # Insert receiver info
     for receiver in status.get('receivers', []):
         cursor.execute("""
-            INSERT INTO ReceiverInfo 
+            INSERT INTO mcs_stats_ReceiverInfo 
             (SnapshotID, StreamType, ProgramNumber, URL, ProgramBitrate)
             VALUES (?, ?, ?, ?, ?)
         """, 
@@ -293,7 +293,7 @@ def insert_channel_snapshot(cursor, channel, capture_time):
         # Insert network info
         for network in receiver.get('networks', []):
             cursor.execute("""
-                INSERT INTO NetworkInfo 
+                INSERT INTO mcs_stats_NetworkInfo 
                 (ReceiverID, SourceIP, SourcePort, NetworkName, PPS, IAT)
                 VALUES (?, ?, ?, ?, ?, ?)
             """,
@@ -312,7 +312,7 @@ def insert_channel_snapshot(cursor, channel, capture_time):
         
         if content_type == 'Video':
             cursor.execute("""
-                INSERT INTO VideoComponents 
+                INSERT INTO mcs_stats_VideoComponents 
                 (SnapshotID, PID, ParentPID, ComponentIndex, Bitrate, Monitored,
                  Codec, Framerate, Resolution, GOPSize, AspectRatio, ColorFormat,
                  Colorspace, ProfileLevel, AFD, PTSInterval, PTSPCRGap, 
@@ -348,7 +348,7 @@ def insert_channel_snapshot(cursor, channel, capture_time):
             daily = loudness.get('daily', {})
             
             cursor.execute("""
-                INSERT INTO AudioComponents 
+                INSERT INTO mcs_stats_AudioComponents 
                 (SnapshotID, PID, ParentPID, ComponentIndex, Bitrate, Monitored,
                  Codec, Language, Channels, Samplerate, PTSInterval, PTSPCRGap,
                  AudioStat, LoudnessIntegratedHourly, LoudnessLRAHourly, 
@@ -387,7 +387,7 @@ def insert_channel_snapshot(cursor, channel, capture_time):
         else:
             # Other components (PAT, PMT, SDT, etc.)
             cursor.execute("""
-                INSERT INTO OtherComponents
+                INSERT INTO mcs_stats_OtherComponents
                 (SnapshotID, PID, ContentType, Bitrate, Monitored, ServiceName, ProviderName)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """,
